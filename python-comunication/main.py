@@ -1,8 +1,36 @@
 import serial
 import time
+from tabulate import tabulate
+from serial.tools import list_ports
+
+def get_serial_port() -> (str | None):
+    ports = list_ports.comports()
+    available_ports = [(i + 1, port.device, port.description) for i, port in enumerate(ports)]
+
+
+    if not available_ports:
+        print("Nenhuma porta serial disponível.")
+        return None
+
+    if len(available_ports) == 1:
+        port = available_ports[0][1]
+        print(f"Conectando à única porta disponível: {port}")
+        return port
+
+    # Print the available ports in a table format
+    headers = ["#", "Porta", "Descrição"]
+    print(tabulate(available_ports, headers=headers, tablefmt="grid"))
+
+    port_index = int(input("Escolha a porta (número): ")) - 1
+    return available_ports[port_index][1]
 
 try:
-    arduino = serial.Serial('COM6', 115200, timeout=1)
+    port = get_serial_port()
+    
+    if port is None:
+        exit()
+
+    arduino = serial.Serial(port, 115200, timeout=1)
     time.sleep(2) # Espera o ESP32 reiniciar após a conexão
 
     while True:
