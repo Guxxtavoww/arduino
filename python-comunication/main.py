@@ -1,4 +1,4 @@
-import serial
+from serial import Serial, SerialException
 import time
 from tabulate import tabulate
 from serial.tools import list_ports
@@ -29,7 +29,7 @@ try:
     if port is None:
         exit()
 
-    arduino = serial.Serial(port, 115200, timeout=1)
+    arduino = Serial(port, 115200, timeout=1)
     time.sleep(2) # Espera o ESP32 reiniciar após a conexão
 
     while True:
@@ -43,6 +43,6 @@ try:
 
         response = arduino.readline().decode('utf-8').strip()
         print(f'Resposta do ESP32 {response}')
-except serial.SerialException as e:
+except SerialException as e:
     arduino.close()
     print(f"Erro: {e}")
