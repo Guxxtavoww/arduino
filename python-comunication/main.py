@@ -7,7 +7,6 @@ def get_serial_port() -> (str | None):
     ports = list_ports.comports()
     available_ports = [(i + 1, port.device, port.description) for i, port in enumerate(ports)]
 
-
     if not available_ports:
         print("Nenhuma porta serial disponível.")
         return None
@@ -26,7 +25,7 @@ def get_serial_port() -> (str | None):
 
 try:
     port = get_serial_port()
-    
+
     if port is None:
         exit()
 
