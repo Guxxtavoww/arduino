@@ -1,5 +1,7 @@
 #define LED 2
 
+bool is_led_on = false;
+
 void setup() {
   Serial.begin(115200);
 
@@ -7,19 +9,20 @@ void setup() {
 }
 
 void loop() {
+  digitalWrite(LED, is_led_on ? HIGH : LOW);
+
   if (Serial.available() > 0) {
     char command = (char)Serial.read();
 
-    Serial.print("Recebido: ");
-    Serial.println(command);
-
     if (command == 'L') {
-      digitalWrite(LED, HIGH); 
+      digitalWrite(LED, HIGH);
+      is_led_on = true;
     } else if (command == 'D') {
       digitalWrite(LED, LOW);
-    } else {
-      Serial.write("Comando desconhecido");
+      is_led_on = false;
     }
+
+    Serial.print(is_led_on ? "ON" : "OFF");
   }
 }
 

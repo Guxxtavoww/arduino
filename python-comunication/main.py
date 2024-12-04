@@ -42,7 +42,7 @@ try:
         arduino.write(command.encode())
 
         response = arduino.readline().decode('utf-8', errors='ignore').strip()
-        print(f'Resposta do ESP32 {response}')
+        print(f'Resposta do ESP32: {response}')
 except SerialException as e:
     if 'arduino' in locals():
         arduino.close()
