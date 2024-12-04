@@ -3,7 +3,7 @@ import time
 from tabulate import tabulate
 from serial.tools import list_ports
 
-def get_serial_port() -> (str | None):
+def get_serial_port() -> str | None:
     ports = list_ports.comports()
     available_ports = [(i + 1, port.device, port.description) for i, port in enumerate(ports)]
 
@@ -30,7 +30,7 @@ try:
         exit()
 
     arduino = Serial(port, 115200, timeout=1)
-    time.sleep(2) # Espera o ESP32 reiniciar após a conexão
+    time.sleep(1) # Espera o ESP32 reiniciar após a conexão
 
     while True:
         command = input('Escreva um comando: ')
@@ -41,8 +41,9 @@ try:
 
         arduino.write(command.encode())
 
-        response = arduino.readline().decode('utf-8').strip()
+        response = arduino.readline().decode('utf-8', errors='ignore').strip()
         print(f'Resposta do ESP32 {response}')
 except SerialException as e:
-    arduino.close()
+    if 'arduino' in locals():
+        arduino.close()
     print(f"Erro: {e}")
